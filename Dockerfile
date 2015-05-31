@@ -9,6 +9,10 @@ RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A
 RUN apt-get update && \
     apt-get -y install curl percona-xtradb-cluster-56 pwgen supervisor openssh-server sshpass xinetd
 
+# download latest stable etcdctl
+ADD https://s3-us-west-2.amazonaws.com/opdemand/etcdctl-v0.4.5 /usr/local/bin/etcdctl
+RUN chmod +x /usr/local/bin/etcdctl
+
 RUN mkdir -p /var/log/supervisor /var/run/sshd
 RUN perl -p -i -e "s/#?PasswordAuthentication .*/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 RUN perl -p -i -e "s/#?PermitRootLogin .*/PermitRootLogin yes/g" /etc/ssh/sshd_config

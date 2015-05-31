@@ -13,6 +13,10 @@ if [ "${PXC_SST_PASSWORD}" == "**ChangeMe**" ]; then
    exit 1
 fi
 
+PXC_NODES=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcnodes
+PXC_SST_PASSWORD=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcsstpassword
+PXC_ROOT_PASSWORD=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcrootpassword
+
 PXC_NODES=`echo ${PXC_NODES} | sed "s/ //g"`
 
 echo "=> Configuring PXC cluster"
