@@ -4,6 +4,10 @@ set -e
 
 [ "$DEBUG" == "1" ] && set -x && set +e
 
+PXC_NODES=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcnodes
+PXC_SST_PASSWORD=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcsstpassword
+PXC_ROOT_PASSWORD=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcrootpassword
+
 if [ "${PXC_NODES}" == "**ChangeMe**" ]; then
    echo "ERROR: You did not specify "PXC_NODES_ADDRESS" environment variable - Exiting..."
    exit 1
@@ -13,9 +17,6 @@ if [ "${PXC_SST_PASSWORD}" == "**ChangeMe**" ]; then
    exit 1
 fi
 
-PXC_NODES=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcnodes
-PXC_SST_PASSWORD=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcsstpassword
-PXC_ROOT_PASSWORD=etcdctl --no-sync -C 10.42.7.127:4001 get /pxcrootpassword
 
 PXC_NODES=`echo ${PXC_NODES} | sed "s/ //g"`
 
