@@ -17,15 +17,17 @@ echo "=> Configuring PXC cluster"
 echo "root:${PXC_ROOT_PASSWORD}" | chpasswd
 sleep 2
 MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
+if [ `echo "${PXC_BOOTSTRAP}" | tr '[:lower:]' '[:upper:]'` == "YES" ]; then
 curl -L http://${ETCD_IP}:4001/v2/keys/pxcserver -XPUT -d value=${MY_RANCHER_IP}
+curl -L http://${ETCD_IP}:4001/v2/keys/pxcsstpassword -XPUT -d value=${PXC_SST_PASSWORD}
+curl -L http://${ETCD_IP}:4001/v2/keys/pxcrootpassword -XPUT -d value=${PXC_ROOT_PASSWORD}
+fi
 change_pxc_nodes.sh "${MY_RANCHER_IP}"
 perl -p -i -e "s/PXC_SST_PASSWORD/${PXC_SST_PASSWORD}/g" ${PXC_CONF}
 perl -p -i -e "s/MY_RANCHER_IP/${MY_RANCHER_IP}/g" ${PXC_CONF}
 curl -L http://${ETCD_IP}:4001/v2/keys/pxcnodes -XPUT -d value=${MY_RANCHER_IP}   
 echo "PXC_NODES=\"${MY_RANCHER_IP}\"" > ${PXC_CONF_FLAG}
-curl -L http://${ETCD_IP}:4001/v2/keys/pxcsstpassword -XPUT -d value=${PXC_SST_PASSWORD}
 echo "PXC_SST_PASSWORD=${PXC_SST_PASSWORD}" >> ${PXC_CONF_FLAG}
-curl -L http://${ETCD_IP}:4001/v2/keys/pxcrootpassword -XPUT -d value=${PXC_ROOT_PASSWORD}
 echo "PXC_ROOT_PASSWORD=${PXC_ROOT_PASSWORD}" >> ${PXC_CONF_FLAG}
 chmod 600 ${PXC_CONF_FLAG}
 chown -R mysql:mysql ${PXC_VOLUME}
