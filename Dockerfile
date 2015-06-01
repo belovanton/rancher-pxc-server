@@ -7,7 +7,7 @@ RUN echo "deb-src http://repo.percona.com/apt trusty main" >> /etc/apt/sources.l
 
 RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A
 RUN apt-get update && \
-    apt-get -y install curl percona-xtradb-cluster-56 pwgen supervisor openssh-server sshpass xinetd
+    apt-get -y install percona-xtradb-cluster-56 pwgen supervisor openssh-server sshpass xinetd
 
 # download latest stable etcdctl
 ADD https://s3-us-west-2.amazonaws.com/opdemand/etcdctl-v0.4.5 /usr/local/bin/etcdctl
