@@ -18,8 +18,11 @@ echo "root:${PXC_ROOT_PASSWORD}" | chpasswd
 sleep 2
 MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
 if [ `echo "${PXC_BOOTSTRAP}" | tr '[:lower:]' '[:upper:]'` == "YES" ]; then
+echo `etcdctl --no-sync -C ${ETCD_IP}:4001 set /pxcserver ${MY_RANCHER_IP}`
 etcdctl --no-sync -C ${ETCD_IP}:4001 set /pxcserver ${MY_RANCHER_IP}
+echo `etcdctl --no-sync -C ${ETCD_IP}:4001 set /pxcsstpassword ${PXC_SST_PASSWORD}`
 etcdctl --no-sync -C ${ETCD_IP}:4001 set /pxcsstpassword ${PXC_SST_PASSWORD}
+echo `etcdctl --no-sync -C ${ETCD_IP}:4001 set /pxcrootpassword ${PXC_ROOT_PASSWORD}`
 etcdctl --no-sync -C ${ETCD_IP}:4001 set /pxcrootpassword ${PXC_ROOT_PASSWORD}
 fi
 change_pxc_nodes.sh "${MY_RANCHER_IP}"
